@@ -1,27 +1,12 @@
 # NgBoost
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.5.
+Today i got my daughter (or myself?) a Lego Boost. Maybe the best money spend ever!
+So much fun and my 6 year old daugher now wants to become a programmer :-)
 
-## Development server
+So anyway first thing i did when i ordered was to check out if there are any node libs for the boost out there.
+I found a pretty nice one here: https://github.com/hobbyquaker/node-movehub
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Getting this going was pretty straight forward so the i thought about BLE and the browser. Wasnt there something?
+Right! You can now access your BLE devices right from the browser! So i spun up a new angular project. Reworked the node-movehub lib a bit and voila - you can now control your Lego Boost directly from the browser. No node, no server nothing needed. Just browser apis!
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This is just the start (5 hours after the boost arrived). Hope i continue this exploration... Too much fun!
