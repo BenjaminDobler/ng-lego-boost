@@ -226,7 +226,7 @@ export class Hub {
    * is counterclockwise.
    * @param {function} [callback]
    */
-  motorTime(port, seconds, dutyCycle, callback) {
+  motorTime(port, seconds, dutyCycle, callback?) {
     if (typeof dutyCycle === 'function') {
       callback = dutyCycle;
       dutyCycle = 100;
@@ -246,7 +246,7 @@ export class Hub {
    * is counterclockwise.
    * @param {function} callback
    */
-  motorTimeMulti(seconds, dutyCycleA, dutyCycleB, callback) {
+  motorTimeMulti(seconds, dutyCycleA, dutyCycleB, callback?) {
     this.write(this.encodeMotorTimeMulti(0x39, seconds, dutyCycleA, dutyCycleB), callback);
   }
 
@@ -291,7 +291,7 @@ export class Hub {
    * `white`
    * @param {function} [callback]
    */
-  led(color, callback) {
+  led(color, callback?) {
     this.write(this.encodeLed(color), callback);
   }
 
