@@ -18,7 +18,11 @@ export class AppComponent {
 
   hub: Hub;
 
-  characteristic:any;
+  pitch: number;
+  roll: number;
+  distance: number;
+
+  characteristic: any;
 
   constructor() {
 
@@ -27,6 +31,19 @@ export class AppComponent {
   async connect() {
     this.characteristic = await BoostConnector.connect()
     this.hub = new Hub(this.characteristic);
+
+    this.hub.emitter.subscribe((evt: any) => {
+      console.log('EVEVEVEVEVEVE', evt);
+      if (evt.type === 'tilt') {
+        this.pitch = evt.data.pitch;
+        this.roll = evt.data.roll;
+
+      }
+
+      if (evt.type === 'distance') {
+        this.distance = evt.data;
+      }
+    });
 
 
   }

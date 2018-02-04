@@ -2,6 +2,7 @@
  * @class Hub
  */
 import { EventEmitter } from '@angular/core';
+
 let w: any = window;
 const Buffer: any = w.buffer.Buffer;
 
@@ -21,16 +22,20 @@ export class Hub {
   num2color: any;
   portInfoTimeout;
   noReconnect;
-  connected:boolean;
+  connected: boolean;
   rssi;
   reconnect;
 
   emit(type, data = null) {
     console.log('Emit ', type, data);
+    this.emitter.emit({
+      type: type,
+      data: data
+    });
   }
 
   constructor(private characteristic) {
-    this.log =  console.log;
+    this.log = console.log;
     this.autoSubscribe = true;
     this.ports = {};
     this.num2type = {
@@ -71,11 +76,12 @@ export class Hub {
 
   connect() {
 
+    this.characteristic.startNotifications();
+
     this.characteristic.addEventListener('characteristicvaluechanged', (event) => {
       const data = Buffer.from(event.target.value.buffer);
       this.parseMessage(data);
     });
-    this.characteristic.startNotifications();
   }
 
   parseMessage(data) {
@@ -113,6 +119,7 @@ export class Hub {
         break;
       }
       case 0x45: {
+        console.log('Parse Sensor');
         this.parseSensor(data);
         break;
       }
@@ -134,6 +141,7 @@ export class Hub {
   }
 
   parseSensor(data) {
+    console.log('Parse Sensor');
     if (!this.ports[data[3]]) {
       this.log('parseSensor unknown port 0x' + data[3].toString(16));
       this.log(data);
@@ -145,6 +153,7 @@ export class Hub {
          * @event Hub#color
          * @param color {string}
          */
+        console.log("Color ", data)
         this.emit('color', this.num2color[data[4]]);
 
         // TODO improve distance calculation!
@@ -300,6 +309,8 @@ export class Hub {
     if (typeof port === 'string') {
       port = this.port2num[port];
     }
+    console.log('Subscribe ', port);
+
     this.write(Buffer.from([0x0A, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]), callback);
   }
 
@@ -334,6 +345,10 @@ export class Hub {
     });
   }
 
+
+  writeCue: any = [];
+  isWritting: boolean = false;
+
   /**
    * Send data over BLE
    * @method Hub#write
@@ -349,7 +364,27 @@ export class Hub {
       data = Buffer.from(arr);
     }
     this.log('>', data);
-    this.characteristic.writeValue(data, true, callback);
+
+    this.writeCue.push({
+      data: data,
+      secondArg: true,
+      callback: callback
+    });
+
+
+    this.writeFromCue();
+  }
+
+  writeFromCue() {
+
+    if (this.writeCue.length > 0 && !this.isWritting) {
+      let el: any = this.writeCue.shift();
+      this.isWritting = true;
+      this.characteristic.writeValue(el.data, true, el.callback).then(() => {
+        this.isWritting = false;
+        this.writeFromCue();
+      });
+    }
   }
 
   encodeMotorTimeMulti(port, seconds, dutyCycleA = 100, dutyCycleB = -100) {
