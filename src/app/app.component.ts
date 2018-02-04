@@ -23,6 +23,9 @@ export class AppComponent {
   distance: number;
 
 
+  remote = false;
+
+
   motorAPower: number = 0;
   motorADuration: number = 0;
 
@@ -70,6 +73,17 @@ export class AppComponent {
     });
 
 
+  }
+
+
+  slideA(value) {
+   console.log("Value", value);
+   this.hub.motorTime('A', 10, value);
+  }
+
+  slideB(value) {
+    console.log("Value ", value);
+    this.hub.motorTime('B', 10, value);
   }
 
 

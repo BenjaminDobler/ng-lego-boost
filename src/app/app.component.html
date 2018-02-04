@@ -3,12 +3,13 @@
 
 <button mat-raised-button (click)="connect()">Connect</button>
 
+<mat-slide-toggle [(ngModel)]="remote">Remote</mat-slide-toggle>
 
 
 
 
 
-<div>
+<div *ngIf="!remote">
 
   <div>
     <label>Motor A</label>
@@ -77,15 +78,23 @@
 
 
 
+  <br>
+  Pitch: {{pitch}}
+  <br>
+  Roll: {{roll}}
 
+  <br>
+  Distance: {{distance}}
 
 </div>
 
 
-<br>
-Pitch: {{pitch}}
-<br>
-Roll: {{roll}}
 
-<br>
-Distance: {{distance}}
+
+
+
+<div *ngIf="remote">
+
+  <mat-slider style="height: 300px;margin-right: 200px" [vertical]="true" #sliderA [value]="0" min="-100" max="100" (input)="slideA(sliderA.value)"></mat-slider>
+  <mat-slider style="height: 300px" [vertical]="true" #sliderB [value]="0" min="-100" max="100" (input)="slideB(sliderB.value)"></mat-slider>
+</div>
