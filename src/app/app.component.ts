@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BoostConnector } from './boost.connector';
 import { Hub } from './hub';
+import { GamePadService } from './GamepadService';
 
 
 let w: any = window;
@@ -39,7 +40,7 @@ export class AppComponent {
 
   characteristic: any;
 
-  constructor() {
+  constructor(private gamepadService:GamePadService) {
 
   }
 
@@ -60,6 +61,7 @@ export class AppComponent {
   async connect() {
     this.characteristic = await BoostConnector.connect()
     this.hub = new Hub(this.characteristic);
+    this.gamepadService.init(this.hub);
 
     this.hub.emitter.subscribe((evt: any) => {
       if (evt.type === 'tilt') {

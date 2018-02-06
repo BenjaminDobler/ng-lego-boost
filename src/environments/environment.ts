@@ -4,5 +4,6 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
+  SHIFT_CLI_VERSION: '2.4.0',
   production: false
 };

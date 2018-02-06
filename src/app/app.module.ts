@@ -9,6 +9,7 @@ import {
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { GamePadService } from './GamepadService';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatSelectModule,
     MatSlideToggleModule
   ],
-  providers: [],
+  providers: [GamePadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
