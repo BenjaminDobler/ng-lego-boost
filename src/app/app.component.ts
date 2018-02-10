@@ -2,6 +2,13 @@ import { Component } from '@angular/core';
 import { BoostConnector } from './boost.connector';
 import { Hub } from './hub';
 import { GamePadService } from './GamepadService';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/throttle';
+import 'rxjs/add/operator/distinctUntilChanged';
+
+import 'rxjs/add/observable/interval';
+import { Observable } from 'rxjs/Observable';
+import { VoiceControl } from './voice.control';
 
 
 let w: any = window;
@@ -40,8 +47,66 @@ export class AppComponent {
 
   characteristic: any;
 
-  constructor(private gamepadService:GamePadService) {
 
+  motorAEvents: Subject<any> = new Subject<any>();
+  motorBEvents: Subject<any> = new Subject<any>();
+
+  constructor(public gamepadService: GamePadService, public voice: VoiceControl) {
+
+
+    this.voice.commands.distinctUntilChanged().subscribe((command: string) => {
+      console.log("Command ", command);
+
+      if (this.hub) {
+        if (command === 'go') {
+          this.hub.motorPowerCommand('A', 20);
+          this.hub.motorPowerCommand('B', 20);
+        } else if (command === 'backward') {
+          this.hub.motorPowerCommand('A', -20);
+          this.hub.motorPowerCommand('B', -20);
+
+        } else if (command === 'stop') {
+          this.hub.motorPowerCommand('A', 0);
+          this.hub.motorPowerCommand('B', 0);
+
+        } else if (command === 'left') {
+          this.hub.motorPowerCommand('A', 0);
+          this.hub.motorPowerCommand('B', 20);
+
+        } else if (command === 'right') {
+          this.hub.motorPowerCommand('A', 20);
+          this.hub.motorPowerCommand('B', 0);
+
+        }
+      }
+
+    });
+
+
+    this.motorAEvents.throttle(ev => Observable.interval(100)).subscribe((value) => {
+      this.hub.motorTime('A', 20, value);
+    });
+
+    this.motorBEvents.throttle(ev => Observable.interval(100)).subscribe((value) => {
+      this.hub.motorTime('B', 20, value);
+    });
+
+    this.gamepadService.multi.throttle(ev => Observable.interval(100)).subscribe((power: any) => {
+      if (this.hub) {
+        console.log('Run ', power);
+        //this.hub.motorTimeMulti(0.5, power.a, power.b);
+        //this.hub.motorAngleMulti(100, power.a, power.b);
+        this.hub.motorPowerCommand('A', power.a);
+        this.hub.motorPowerCommand('B', power.b);
+      }
+
+    });
+
+  }
+
+
+  startVoice() {
+    this.voice.start();
   }
 
 
@@ -61,7 +126,6 @@ export class AppComponent {
   async connect() {
     this.characteristic = await BoostConnector.connect()
     this.hub = new Hub(this.characteristic);
-    this.gamepadService.init(this.hub);
 
     this.hub.emitter.subscribe((evt: any) => {
       if (evt.type === 'tilt') {
@@ -77,16 +141,6 @@ export class AppComponent {
 
   }
 
-
-  slideA(value) {
-   console.log("Value", value);
-   this.hub.motorTime('A', 10, value);
-  }
-
-  slideB(value) {
-    console.log("Value ", value);
-    this.hub.motorTime('B', 10, value);
-  }
-
-
 }
+
+

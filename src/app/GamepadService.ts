@@ -1,32 +1,40 @@
 import { Hub } from './hub';
+import { Subject } from 'rxjs/Subject';
 
 export class GamePadService {
 
 
   hub: Hub;
 
+
+  public x: number = 0;
+  public y: number = 0;
+
+  public motorAPower = 0;
+  public motorBPower = 0;
+
+
+  motorA: Subject<number> = new Subject<number>();
+  motorB: Subject<number> = new Subject<number>();
+  multi: Subject<any> = new Subject<any>();
+
+
   constructor() {
     window.addEventListener('gamepadconnected', (e: any) => {
       console.log('Gamepad connected at index %d: %s. %d buttons, %d axes.',
         e.gamepad.index, e.gamepad.id,
         e.gamepad.buttons.length, e.gamepad.axes.length);
-
+      this.init();
 
     });
   }
 
 
-  init(hub: Hub) {
-    this.hub = hub;
+  init() {
     this.startLoop();
 
   }
 
-
-  isGoingForward: boolean = false;
-  isGoingBackward: boolean = false;
-  isGoingLeft: boolean = false;
-  isGoingRight: boolean = false;
 
   startLoop() {
     let nav: any = navigator;
@@ -36,12 +44,45 @@ export class GamePadService {
     }
 
     var gp = gamepads[0];
-    //console.log("GP ", gp);
-    console.log(gp.buttons[12]); // UP
-    console.log(gp.buttons[13]); // Down
-    console.log(gp.buttons[14]); // left
-    console.log(gp.buttons[15]); // right
 
+
+    let vert = gp.axes[1];
+    let hor = gp.axes[0];
+
+    this.x = gp.axes[0];
+    this.y = gp.axes[1];
+
+
+    vert *= -1;
+
+
+    let MA = (this.y * -100);
+    let MB = (this.y * -100);
+
+    let leftSteering = this.x;
+    let rightSteering = this.x;
+
+
+    if (this.x < 0) {
+      leftSteering = this.x * -1;
+      rightSteering = 0;
+    } else {
+      leftSteering = 0;
+      rightSteering = this.x;
+    }
+
+    if (MA > 100) MA = 100;
+    if (MA < -100) MA = -100;
+
+    this.motorAPower = MA * (1 - leftSteering);
+    this.motorBPower = MB * (1 - rightSteering);
+
+    this.motorA.next(this.motorAPower);
+    this.motorB.next(this.motorBPower);
+    this.multi.next({ a: this.motorAPower, b: this.motorBPower });
+
+
+    /*
     if (this.hub) {
       if (gp.buttons[12].pressed === true && !this.isGoingForward) {
         this.hub.motorTimeMulti(30, 50, 50);
@@ -75,12 +116,21 @@ export class GamePadService {
         this.isGoingRight = false;
       }
 
+
       if (gp) {
         requestAnimationFrame(() => {
           this.startLoop();
         });
       }
     }
+    */
+
+    if (gp) {
+      requestAnimationFrame(() => {
+        this.startLoop();
+      });
+    }
+
 
   }
 

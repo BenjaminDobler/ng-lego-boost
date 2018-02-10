@@ -1,12 +1,6 @@
-
-
-
 <button mat-raised-button (click)="connect()">Connect</button>
 
 <mat-slide-toggle [(ngModel)]="remote">Remote</mat-slide-toggle>
-
-
-
 
 
 <div *ngIf="!remote">
@@ -45,7 +39,6 @@
   </div>
 
 
-
   <div>
     <label>Motor A/B</label>
 
@@ -63,19 +56,16 @@
   </div>
 
 
-
-
   <div>
     <label>LED</label>
-  <mat-form-field>
-    <mat-select #se placeholder="LED Color" (change)="onSetLed(se.value)">
-      <mat-option *ngFor="let color of colors" [value]="color">
-        {{ color }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field>
+      <mat-select #se placeholder="LED Color" (change)="onSetLed(se.value)">
+        <mat-option *ngFor="let color of colors" [value]="color">
+          {{ color }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-
 
 
   <br>
@@ -89,12 +79,38 @@
 </div>
 
 
+<div style="position: relative;background: #00ff00;border:solid 1px #000;width:200px;height:200px">
+  <div style="position: absolute;left:-10px;right:-10px;border: solid 1px #000;width:220px;top:100px"></div>
+  <div style="position: absolute;top:-10px;bottom:-10px;border: solid 1px #000;height:220px;left: 100px"></div>
+  <div [style.transform]="'translate('+gamepadService.x*100+'px,'+gamepadService.y*100+'px)'"
+       style="position: absolute;top:100px;left:100px;">
+    <div
+      style="position: absolute;border-radius: 10px;left:-10px;top:-10px;width:20px;height:20px;background: #ff0000"></div>
+  </div>
 
 
+
+</div>
+
+
+<div style="display: flex">
+  <div style="position: relative; width: 20px;height:200px;border: solid 1px #000000;overflow: hidden;">
+    <div [style.transform]="'translateY('+gamepadService.motorAPower*-1+'px)'" style="position: absolute; top: 100px;height: 200px; width: 20px;left: 0; background: #00ff00"></div>
+  </div>
+
+  <div style="position: relative; width: 20px;height:200px;border: solid 1px #000000;overflow: hidden;">
+    <div [style.transform]="'translateY('+gamepadService.motorBPower*-1+'px)'" style="position: absolute; top: 100px;height: 200px; width: 20px;left: 0; background: #00ff00"></div>
+  </div>
+</div>
 
 
 <div *ngIf="remote">
 
-  <mat-slider style="height: 300px;margin-right: 200px" [vertical]="true" #sliderA [value]="0" min="-100" max="100" (input)="slideA(sliderA.value)"></mat-slider>
-  <mat-slider style="height: 300px" [vertical]="true" #sliderB [value]="0" min="-100" max="100" (input)="slideB(sliderB.value)"></mat-slider>
+  <mat-slider style="height: 300px;margin-right: 200px" [vertical]="true" #sliderA [value]="0" min="-100" max="100"
+              (input)="motorAEvents.next(sliderA.value)"></mat-slider>
+  <mat-slider style="height: 300px" [vertical]="true" #sliderB [value]="0" min="-100" max="100"
+              (input)="motorAEvents.next(sliderB.value)"></mat-slider>
 </div>
+
+
+<button (click)="startVoice()">Start Voice</button>

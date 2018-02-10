@@ -278,9 +278,28 @@ export class Hub {
    * rotation is counterclockwise.
    * @param {function} callback
    */
-  motorAngleMulti(angle, dutyCycleA, dutyCycleB, callback) {
+  motorAngleMulti(angle, dutyCycleA, dutyCycleB, callback?) {
     this.write(this.encodeMotorAngleMulti(0x39, angle, dutyCycleA, dutyCycleB), callback);
   }
+
+
+  motorPowerCommand(port, power) {
+    this.write(this.encodeMotorPower(port, power));
+  }
+
+  //[0x09, 0x00, 0x81, 0x39, 0x11, 0x07, 0x00, 0x64, 0x03]
+  encodeMotorPower(port, dutyCycle = 100) {
+    let p = this.port2num[port];
+    const buf = Buffer.from([0x09, 0x00, 0x81, p, 0x11, 0x07, 0x00, 0x64, 0x03]);
+    //buf.writeUInt16LE(seconds * 1000, 6);
+    buf.writeInt8(dutyCycle, 6);
+    return buf;
+  }
+
+
+
+  //0x0C, 0x00, 0x81, port, 0x11, 0x09, 0x00, 0x00, 0x00, 0x64, 0x7F, 0x03
+
 
   /**
    * Control the LED on the Move Hub
@@ -355,7 +374,7 @@ export class Hub {
    * @param {string|Buffer} data If a string is given it has to have hex bytes separated by spaces, e.g. `0a 01 c3 b2`
    * @param {function} callback
    */
-  write(data, callback) {
+  write(data, callback?) {
     if (typeof data === 'string') {
       const arr = [];
       data.split(' ').forEach(c => {
