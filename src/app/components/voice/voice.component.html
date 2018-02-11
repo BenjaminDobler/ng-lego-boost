@@ -1,0 +1,16 @@
+<button (click)="startVoice()">Start Voice</button>
+
+
+<div class="command-box">
+
+
+  <div class="command" *ngIf="lastCommand==='go'" [@myAnimation]>Vorwärts</div>
+
+  <div class="command" *ngIf="lastCommand==='left'" [@myAnimation]>Links</div>
+
+  <div class="command" *ngIf="lastCommand==='right'" [@myAnimation]>Rechts</div>
+
+  <div class="command" *ngIf="lastCommand==='backward'" [@myAnimation]>Rückwärts</div>
+
+  <div class="command" *ngIf="lastCommand==='stop'" [@myAnimation]>Stopp</div>
+</div>

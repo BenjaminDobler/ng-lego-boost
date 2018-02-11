@@ -1,116 +1,30 @@
-<button mat-raised-button (click)="connect()">Connect</button>
-
-<mat-slide-toggle [(ngModel)]="remote">Remote</mat-slide-toggle>
-
-
-<div *ngIf="!remote">
-
-  <div>
-    <label>Motor A</label>
-
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Duration" [(ngModel)]="motorADuration">
-    </mat-form-field>
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Power" [(ngModel)]="motorAPower">
-    </mat-form-field>
-
-    <button mat-button="" (click)="go('A')">Go!</button>
-
-  </div>
-
-
-  <div>
-    <label>Motor B</label>
-
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Duration" [(ngModel)]="motorBDuration">
-    </mat-form-field>
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Power" [(ngModel)]="motorBPower">
-    </mat-form-field>
-
-    <button mat-button="" (click)="go('B')">Go!</button>
-
-  </div>
-
-
-  <div>
-    <label>Motor A/B</label>
-
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Duration" [(ngModel)]="motorABDuration">
-    </mat-form-field>
-
-    <mat-form-field class="example-margin">
-      <input matInput type="number" placeholder="Power" [(ngModel)]="motorABPower">
-    </mat-form-field>
-
-    <button mat-button="" (click)="goMulti()">Go!</button>
-
-  </div>
-
-
-  <div>
-    <label>LED</label>
-    <mat-form-field>
-      <mat-select #se placeholder="LED Color" (change)="onSetLed(se.value)">
-        <mat-option *ngFor="let color of colors" [value]="color">
-          {{ color }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-
-
-  <br>
-  Pitch: {{pitch}}
-  <br>
-  Roll: {{roll}}
-
-  <br>
-  Distance: {{distance}}
-
+<div class="nav" style="display: flex">
+  <a routerLink="/home" routerLinkActive="active">Home</a>
+  <a routerLink="/gamepad" routerLinkActive="active">Gamepad</a>
+  <a routerLink="/voice" routerLinkActive="active">Voice</a>
+  <a routerLink="/manual" routerLinkActive="active">Manual</a>
 </div>
 
 
-<div style="position: relative;background: #00ff00;border:solid 1px #000;width:200px;height:200px">
-  <div style="position: absolute;left:-10px;right:-10px;border: solid 1px #000;width:220px;top:100px"></div>
-  <div style="position: absolute;top:-10px;bottom:-10px;border: solid 1px #000;height:220px;left: 100px"></div>
-  <div [style.transform]="'translate('+gamepadService.x*100+'px,'+gamepadService.y*100+'px)'"
-       style="position: absolute;top:100px;left:100px;">
-    <div
-      style="position: absolute;border-radius: 10px;left:-10px;top:-10px;width:20px;height:20px;background: #ff0000"></div>
+<router-outlet></router-outlet>
+
+
+
+
+
+
+
+<div style="position: absolute; bottom: 0; height: 200px;left:0;right:0;background: #ff7f00">
+  <div class="info">
+    <br>
+    Pitch: {{pitch}}
+    <br>
+    Roll: {{roll}}
+    <br>
+    Distance: {{distance}}
   </div>
 
-
+  <a (click)="connect()">Connect</a>
+  Connected?  {{connected}}
 
 </div>
-
-
-<div style="display: flex">
-  <div style="position: relative; width: 20px;height:200px;border: solid 1px #000000;overflow: hidden;">
-    <div [style.transform]="'translateY('+gamepadService.motorAPower*-1+'px)'" style="position: absolute; top: 100px;height: 200px; width: 20px;left: 0; background: #00ff00"></div>
-  </div>
-
-  <div style="position: relative; width: 20px;height:200px;border: solid 1px #000000;overflow: hidden;">
-    <div [style.transform]="'translateY('+gamepadService.motorBPower*-1+'px)'" style="position: absolute; top: 100px;height: 200px; width: 20px;left: 0; background: #00ff00"></div>
-  </div>
-</div>
-
-
-<div *ngIf="remote">
-
-  <mat-slider style="height: 300px;margin-right: 200px" [vertical]="true" #sliderA [value]="0" min="-100" max="100"
-              (input)="motorAEvents.next(sliderA.value)"></mat-slider>
-  <mat-slider style="height: 300px" [vertical]="true" #sliderB [value]="0" min="-100" max="100"
-              (input)="motorAEvents.next(sliderB.value)"></mat-slider>
-</div>
-
-
-<button (click)="startVoice()">Start Voice</button>

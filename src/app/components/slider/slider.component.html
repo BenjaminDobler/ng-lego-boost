@@ -1,0 +1,4 @@
+<mat-slider style="height: 300px;margin-right: 200px" [vertical]="true" #sliderA [value]="0" min="-100" max="100"
+            (input)="motorAEvents.next(sliderA.value)"></mat-slider>
+<mat-slider style="height: 300px" [vertical]="true" #sliderB [value]="0" min="-100" max="100"
+            (input)="motorAEvents.next(sliderB.value)"></mat-slider>

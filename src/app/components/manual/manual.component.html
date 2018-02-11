@@ -1,0 +1,68 @@
+
+
+  <div>
+    <label>Motor A</label>
+
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input matInput type="number" placeholder="Duration" [(ngModel)]="motorADuration">
+    </mat-form-field>
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input matInput type="number" placeholder="Power" [(ngModel)]="motorAPower">
+    </mat-form-field>
+
+    <button mat-button="" (click)="go('A')">Go!</button>
+
+  </div>
+
+
+  <div>
+    <label>Motor B</label>
+
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input matInput type="number" placeholder="Duration" [(ngModel)]="motorBDuration">
+    </mat-form-field>
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input matInput type="number" placeholder="Power" [(ngModel)]="motorBPower">
+    </mat-form-field>
+
+    <button mat-button="" (click)="go('B')">Go!</button>
+
+  </div>
+
+
+  <div>
+    <label>Motor A/B</label>
+
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input  matInput type="number" placeholder="Duration" [(ngModel)]="motorABDuration">
+    </mat-form-field>
+
+    <mat-form-field class="example-margin" style="width: 70px">
+      <input matInput type="number" placeholder="Power" [(ngModel)]="motorABPower">
+    </mat-form-field>
+
+    <button mat-button="" (click)="goMulti()">Go!</button>
+
+  </div>
+
+
+  <div>
+    <label>LED</label>
+    <mat-form-field>
+      <mat-select #se placeholder="LED Color" (change)="onSetLed(se.value)">
+        <mat-option *ngFor="let color of colors" [value]="color">
+          {{ color }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+
+
+

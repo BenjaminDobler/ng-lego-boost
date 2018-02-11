@@ -70,12 +70,19 @@ export class GamePadService {
       leftSteering = 0;
       rightSteering = this.x;
     }
+    MA = MA + (rightSteering * 100);
+    MB = MB + (leftSteering * 100);
 
     if (MA > 100) MA = 100;
     if (MA < -100) MA = -100;
+    if (MB > 100) MB = 100;
+    if (MB < -100) MB = -100;
 
-    this.motorAPower = MA * (1 - leftSteering);
-    this.motorBPower = MB * (1 - rightSteering);
+    if (Math.abs(MA) < 10) MA = 0;
+    if (Math.abs(MB) < 10) MB = 0;
+
+    this.motorAPower = MA;// * (1 - leftSteering);
+    this.motorBPower = MB;// * (1 - rightSteering);
 
     this.motorA.next(this.motorAPower);
     this.motorB.next(this.motorBPower);

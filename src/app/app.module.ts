@@ -11,11 +11,36 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GamePadService } from './GamepadService';
 import { VoiceControl } from './voice.control';
+import { VoiceComponent } from './components/voice/voice.component';
+import { GamepadComponent } from './components/gamepad/gamepad.component';
+import { ManualComponent } from './components/manual/manual.component';
+import { Router, RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { Hub } from './hub';
+import { HubService } from './services/hub.service';
+import { SliderComponent } from './components/slider/slider.component';
 
+
+
+const appRoutes: Routes = [
+  { path: 'home', component: HomeComponent },
+  { path: 'gamepad', component: GamepadComponent },
+  { path: 'voice',      component: VoiceComponent },
+  { path: 'manual',      component: ManualComponent },
+  { path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  }
+];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    VoiceComponent,
+    GamepadComponent,
+    ManualComponent,
+    HomeComponent,
+    SliderComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -27,9 +52,10 @@ import { VoiceControl } from './voice.control';
     MatButtonModule,
     MatOptionModule,
     MatSelectModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    RouterModule.forRoot(appRoutes)
   ],
-  providers: [GamePadService, VoiceControl],
+  providers: [GamePadService, VoiceControl, HubService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

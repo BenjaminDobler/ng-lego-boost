@@ -27,7 +27,6 @@ export class Hub {
   reconnect;
 
   emit(type, data = null) {
-    console.log('Emit ', type, data);
     this.emitter.emit({
       type: type,
       data: data
@@ -93,7 +92,6 @@ export class Hub {
            * Fires when a connection to the Move Hub is established
            * @event Hub#connect
            */
-          this.log(this.ports);
           this.emit('connect');
           this.connected = true;
 
@@ -119,7 +117,6 @@ export class Hub {
         break;
       }
       case 0x45: {
-        console.log('Parse Sensor');
         this.parseSensor(data);
         break;
       }
@@ -136,15 +133,12 @@ export class Hub {
       }
       default:
         this.log('unknown message type 0x' + data[2].toString(16));
-        this.log('<', data);
     }
   }
 
   parseSensor(data) {
-    console.log('Parse Sensor');
     if (!this.ports[data[3]]) {
       this.log('parseSensor unknown port 0x' + data[3].toString(16));
-      this.log(data);
       return;
     }
     switch (this.ports[data[3]].deviceType) {
@@ -153,7 +147,6 @@ export class Hub {
          * @event Hub#color
          * @param color {string}
          */
-        console.log("Color ", data)
         this.emit('color', this.num2color[data[4]]);
 
         // TODO improve distance calculation!
@@ -203,7 +196,6 @@ export class Hub {
       }
       default:
         this.log('unknown sensor type 0x' + data[3].toString(16), data[3], this.ports[data[3]].deviceType);
-        this.log('<', data);
     }
   }
 
@@ -328,7 +320,6 @@ export class Hub {
     if (typeof port === 'string') {
       port = this.port2num[port];
     }
-    console.log('Subscribe ', port);
 
     this.write(Buffer.from([0x0A, 0x00, 0x41, port, option, 0x01, 0x00, 0x00, 0x00, 0x01]), callback);
   }
@@ -382,7 +373,6 @@ export class Hub {
       });
       data = Buffer.from(arr);
     }
-    this.log('>', data);
 
     this.writeCue.push({
       data: data,
